@@ -9,10 +9,8 @@ from openpyxl.styles import Font
 from openpyxl.utils import get_column_letter
 import requests
 
-# Define the key file path in the repo
-KEY_FILE_URL = (
-    "https://raw.githubusercontent.com/Jobcheruyot/QM_Treasury_Reconcilliations/main/key.xlsx"
-)
+# URL to the Key Excel file in your repo
+KEY_FILE_URL = "https://raw.githubusercontent.com/Jobcheruyot/QM_Treasury_Reconcilliations/main/key.xlsx"
 
 st.set_page_config(page_title="Mpesa Reconciliation Web App", layout="wide")
 st.title("Mpesa Reconciliation Web App")
@@ -47,23 +45,19 @@ def autofit(ws):
         ws.column_dimensions[column].width = max_length + 2
 
 if all([aspire_file, safaricom_file]):
-    # =============
-    # LOAD DATA
-    # =============
+    # Load the Aspire and Safaricom files
     aspire = pd.read_csv(aspire_file)
     safaricom = pd.read_csv(safaricom_file)
-
-    # Read key file directly from GitHub
+    # Load the key file from the repo
     key_req = requests.get(KEY_FILE_URL)
     key_req.raise_for_status()
     key = pd.read_excel(io.BytesIO(key_req.content))
-
     original_safaricom = safaricom.copy()
     original_aspire = aspire.copy()
     original_key = key.copy()
 
     # ========================
-    # PROCESSING (unchanged)
+    # PROCESSING (as in your original code)
     # ========================
 
     # 1. Align safaricom columns if not correct
