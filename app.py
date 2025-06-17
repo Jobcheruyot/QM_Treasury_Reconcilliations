@@ -7,22 +7,26 @@ from datetime import datetime
 from openpyxl import Workbook
 from openpyxl.styles import Font
 from openpyxl.utils import get_column_letter
+import requests
+
+# Define the key file path in the repo
+KEY_FILE_URL = (
+    "https://raw.githubusercontent.com/Jobcheruyot/QM_Treasury_Reconcilliations/main/key.xlsx"
+)
 
 st.set_page_config(page_title="Mpesa Reconciliation Web App", layout="wide")
 st.title("Mpesa Reconciliation Web App")
 
 st.markdown("""
-Upload your **Aspire CSV**, **Safaricom CSV**, and **Key Excel** files below to perform reconciliation.  
+Upload your **Aspire CSV** and **Safaricom CSV** files below to perform reconciliation.  
 All four reports will be included in a single Excel workbook, each on its own sheet.
 """)
 
-col1, col2, col3 = st.columns(3)
+col1, col2 = st.columns(2)
 with col1:
     aspire_file = st.file_uploader("Upload Aspire CSV", type=["csv"], key='aspire')
 with col2:
     safaricom_file = st.file_uploader("Upload Safaricom CSV", type=["csv"], key='safaricom')
-with col3:
-    key_file = st.file_uploader("Upload Key Excel", type=["xlsx"], key='key')
 
 def style_header(ws, header_row=1):
     for col in range(1, ws.max_column + 1):
@@ -33,28 +37,33 @@ def style_header(ws, header_row=1):
 def autofit(ws):
     for col in ws.columns:
         max_length = 0
-        column = col[0].column_letter # Get the column name
+        column = col[0].column_letter
         for cell in col:
-            try:  # Necessary to avoid error on empty cells
+            try:
                 if len(str(cell.value)) > max_length:
                     max_length = len(str(cell.value))
             except Exception:
                 pass
         ws.column_dimensions[column].width = max_length + 2
 
-if all([aspire_file, safaricom_file, key_file]):
-    # =========
+if all([aspire_file, safaricom_file]):
+    # =============
     # LOAD DATA
-    # =========
+    # =============
     aspire = pd.read_csv(aspire_file)
     safaricom = pd.read_csv(safaricom_file)
-    key = pd.read_excel(key_file)
+
+    # Read key file directly from GitHub
+    key_req = requests.get(KEY_FILE_URL)
+    key_req.raise_for_status()
+    key = pd.read_excel(io.BytesIO(key_req.content))
+
     original_safaricom = safaricom.copy()
     original_aspire = aspire.copy()
     original_key = key.copy()
 
     # ========================
-    # PROCESSING (verbatim to .py, do not skip even if repeated)
+    # PROCESSING (unchanged)
     # ========================
 
     # 1. Align safaricom columns if not correct
@@ -504,4 +513,4 @@ if all([aspire_file, safaricom_file, key_file]):
     )
     st.info("Sheets: Reversals, Prev_Day_Utilized, Cashed_Out, Daily_Summary")
 else:
-    st.info("Please upload all three files to proceed.")
+    st.info("Please upload both Aspire and Safaricom CSV files to proceed.")
