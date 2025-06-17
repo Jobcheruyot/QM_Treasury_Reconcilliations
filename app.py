@@ -1,4 +1,35 @@
 import streamlit as st
+import streamlit_authenticator as stauth
+
+# --- User Credentials ---
+names = ['Admin', 'User1', 'User2']
+usernames = ['admin', 'user1', 'user2']
+passwords = ['admin123', 'user1pass', 'user2pass']  # Use strong passwords!
+
+# --- Hash the passwords (for security) ---
+hashed_passwords = stauth.Hasher(passwords).generate()
+
+# --- Set up the authenticator ---
+authenticator = stauth.Authenticate(
+    names,                # Display names
+    usernames,            # Corresponding usernames
+    hashed_passwords,     # Hashed passwords
+    'treasury_dashboard', # Cookie name (can be any string)
+    'abcdef',             # Cookie key (should be random)
+    cookie_expiry_days=1  # Cookie expiry in days
+)
+
+# --- Login Widget ---
+name, authentication_status, username = authenticator.login('Login', 'main')
+
+if authentication_status is False:
+    st.error('Username/password is incorrect')
+elif authentication_status is None:
+    st.warning('Please enter your username and password')
+elif authentication_status:
+    authenticator.logout('Logout', 'sidebar')
+    st.sidebar.success(f'Logged in as {name}')
+    # ...rest of your app goes here...import streamlit as st
 
 # -----------------------------
 # Dummy credentials dictionary
