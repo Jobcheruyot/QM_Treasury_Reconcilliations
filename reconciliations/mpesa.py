@@ -8,6 +8,9 @@ from openpyxl import Workbook
 from openpyxl.styles import Font
 from openpyxl.utils import get_column_letter
 
+# ✅ This function wraps all Streamlit + logic code
+def run_mpesa_reconciliation():
+
 st.set_page_config(page_title="Mpesa Reconciliation Web App", layout="wide")
 st.title("Mpesa Reconciliation Web App")
 
