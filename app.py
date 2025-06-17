@@ -4,20 +4,19 @@ import streamlit_authenticator as stauth
 # --- User Credentials ---
 names = ['Admin', 'User1']
 usernames = ['admin', 'user1']
-passwords = ['password123', 'user1pass']
+passwords = ['password123', 'user1pass']  # Replace with your secure passwords
 
-# --- Hash the passwords (correct syntax for streamlit-authenticator >= 0.4.2) ---
-hasher = stauth.Hasher()
-hashed_passwords = hasher.generate(passwords)
+# --- Hash the passwords (for security) ---
+hashed_passwords = stauth.Hasher(passwords).generate()
 
-# --- Authenticator setup ---
+# --- Set up the authenticator ---
 authenticator = stauth.Authenticate(
-    names,
-    usernames,
-    hashed_passwords,
-    'treasury_dashboard',
-    'abcdef',
-    cookie_expiry_days=1
+    names,                # Display names
+    usernames,            # Corresponding usernames
+    hashed_passwords,     # Hashed passwords
+    'treasury_dashboard', # Cookie name (any unique string)
+    'abcdef',             # Cookie key (any random string)
+    cookie_expiry_days=1  # Cookie expiry in days
 )
 
 # --- Login Widget ---
@@ -30,5 +29,4 @@ elif authentication_status is None:
 elif authentication_status:
     authenticator.logout('Logout', 'sidebar')
     st.sidebar.success(f'Logged in as {name}')
-
-    # ✅ Your dashboard or reconciliation call goes here
+    # Your menu and reconciliation code goes here!
