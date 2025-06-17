@@ -4,10 +4,11 @@ import streamlit_authenticator as stauth
 # --- User Credentials ---
 names = ['Admin', 'User1']
 usernames = ['admin', 'user1']
-passwords = ['password123', 'user1pass']  # Plain passwords
+passwords = ['password123', 'user1pass']
 
-# --- Hash the passwords ---
-hashed_passwords = stauth.Hasher(passwords).generate()
+# --- Hash the passwords (correct syntax for streamlit-authenticator >= 0.4.2) ---
+hasher = stauth.Hasher()
+hashed_passwords = hasher.generate(passwords)
 
 # --- Authenticator setup ---
 authenticator = stauth.Authenticate(
@@ -30,5 +31,4 @@ elif authentication_status:
     authenticator.logout('Logout', 'sidebar')
     st.sidebar.success(f'Logged in as {name}')
 
-    # 🔽 Add your dashboard or logic call here:
-    # reconciliation_dashboard()
+    # ✅ Your dashboard or reconciliation call goes here
