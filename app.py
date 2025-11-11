@@ -8,6 +8,19 @@ from openpyxl import Workbook
 from openpyxl.styles import Font
 from openpyxl.utils import get_column_letter
 import requests
+# Add the following at the very top of your Streamlit script, AFTER st.set_page_config
+
+import streamlit as st
+
+# Hide Streamlit default header and footer
+hide_st_style = """
+    <style>
+    header {visibility: hidden;}
+    footer {visibility: hidden;}
+    </style>
+"""
+st.markdown(hide_st_style, unsafe_allow_html=True)
+
 
 # URL to the Key Excel file in your repo
 KEY_FILE_URL = "https://raw.githubusercontent.com/Jobcheruyot/QM_Treasury_Reconcilliations/main/key.xlsx"
@@ -508,3 +521,4 @@ if all([aspire_file, safaricom_file]):
     st.info("Sheets: Reversals, Prev_Day_Utilized, Cashed_Out, Daily_Summary")
 else:
     st.info("Please upload both Aspire and Safaricom CSV files to proceed.")
+
