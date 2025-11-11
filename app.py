@@ -12,15 +12,37 @@ import requests
 
 import streamlit as st
 
-# Hide Streamlit default header and footer
-hide_st_style = """
-    <style>
-    header {visibility: hidden;}
-    footer {visibility: hidden;}
-    </style>
-"""
-st.markdown(hide_st_style, unsafe_allow_html=True)
+hide_st_elements = """
+<style>
 
+    /* ----------------------------- */
+    /* HIDE STREAMLIT HEADER (top)   */
+    /* ----------------------------- */
+    header {visibility: hidden !important;}
+    header * {visibility: hidden !important;}
+    div[data-testid="stHeader"] {display: none !important;}
+    div[data-testid="stToolbar"] {display: none !important;}
+
+    /* ----------------------------- */
+    /* HIDE STREAMLIT FOOTER (bottom)*/
+    /* ----------------------------- */
+    footer {visibility: hidden !important;}
+    footer * {visibility: hidden !important;}
+    div[data-testid="stFooter"] {display: none !important;}
+
+    /* Remove extra spacing from footer region */
+    footer {height: 0px !important; margin: 0 !important; padding: 0 !important;}
+    div[data-testid="stStatusWidget"] {display: none !important;}
+
+    /* ----------------------------- */
+    /* HIDE STREAMLIT MENU (optional)*/
+    /* ----------------------------- */
+    #MainMenu {visibility: hidden !important;}
+
+</style>
+"""
+
+st.markdown(hide_st_elements, unsafe_allow_html=True)
 
 # URL to the Key Excel file in your repo
 KEY_FILE_URL = "https://raw.githubusercontent.com/Jobcheruyot/QM_Treasury_Reconcilliations/main/key.xlsx"
@@ -521,4 +543,5 @@ if all([aspire_file, safaricom_file]):
     st.info("Sheets: Reversals, Prev_Day_Utilized, Cashed_Out, Daily_Summary")
 else:
     st.info("Please upload both Aspire and Safaricom CSV files to proceed.")
+
 
